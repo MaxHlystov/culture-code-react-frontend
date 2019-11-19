@@ -5,7 +5,7 @@ import { GOOGLE_AUTH_URL, GITHUB_AUTH_URL } from '../../constants';
 import { signup } from '../../util/APIUtils';
 import googleLogo from '../../img/google-logo.png';
 import githubLogo from '../../img/github-logo.png';
-import Alert from 'react-s-alert';
+import { withAlert } from 'react-alert';
 
 class Signup extends Component {
     render() {
@@ -76,10 +76,10 @@ class SignupForm extends Component {
 
         signup(signUpRequest)
         .then(response => {
-            Alert.success("You're successfully registered. Please login to continue!");
+            this.props.alert.success("You're successfully registered. Please login to continue!");
             this.props.history.push("/login");
         }).catch(error => {
-            Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');            
+            this.props.alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');            
         });
     }
 
@@ -110,4 +110,4 @@ class SignupForm extends Component {
     }
 }
 
-export default Signup
+export default withAlert()(Signup);

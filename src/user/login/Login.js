@@ -5,7 +5,7 @@ import { login } from '../../util/APIUtils';
 import { Link, Redirect } from 'react-router-dom'
 import googleLogo from '../../img/google-logo.png';
 import githubLogo from '../../img/github-logo.png';
-import Alert from 'react-s-alert';
+import { withAlert } from 'react-alert';
 
 class Login extends Component {
     componentDidMount() {
@@ -13,7 +13,7 @@ class Login extends Component {
         // Here we display the error and then remove the error query parameter from the location.
         if(this.props.location.state && this.props.location.state.error) {
             setTimeout(() => {
-                Alert.error(this.props.location.state.error, {
+                this.props.alert.error(this.props.location.state.error, {
                     timeout: 7000
                 });
                 this.props.history.replace({
@@ -86,16 +86,14 @@ class LoginForm extends Component {
 
     handleSubmit(event) {
         event.preventDefault();   
-
         const loginRequest = Object.assign({}, this.state);
-
         login(loginRequest)
         .then(response => {
             localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-            Alert.success("You're successfully logged in!");
+            this.props.alert.success("You're successfully logged in!");
             this.props.history.push("/");
         }).catch(error => {
-            Alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
+            this.props.alert.error((error && error.message) || 'Oops! Something went wrong. Please try again!');
         });
     }
     
@@ -120,4 +118,4 @@ class LoginForm extends Component {
     }
 }
 
-export default Login
+export default withAlert()(Login);
